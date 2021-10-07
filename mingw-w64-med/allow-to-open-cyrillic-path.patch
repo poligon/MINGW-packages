@@ -1,0 +1,19 @@
+--- med-4.1.0/src/ci/MEDfileVersionOpen.c.orig	2020-03-11 11:36:35.000000000 +0200
++++ med-4.1.0/src/ci/MEDfileVersionOpen.c	2021-10-07 09:04:46.452394600 +0300
+@@ -63,16 +63,10 @@
+   switch(accessmode)
+     {
+     case MED_ACC_RDONLY :
+-      if (_MEDaccess(filename,F_OK)) {
+-	MED_ERR_(_ret,MED_ERR_EXIST,MED_ERR_FILE,filename);
+-	goto ERROR;
+-
+-      } else {
+ 	if ((_fid = _MEDfileOpen((char*) filename,accessmode)) < 0) {
+ 	  MED_ERR_(_ret,MED_ERR_OPEN,MED_ERR_FILE,filename);
+ 	  goto ERROR;
+ 	}
+-      };
+       break;
+ 
+     case MED_ACC_RDWR :
