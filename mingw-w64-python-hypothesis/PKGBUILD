@@ -6,7 +6,7 @@ pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
 provides=("${MINGW_PACKAGE_PREFIX}-python3-${_realname}")
 conflicts=("${MINGW_PACKAGE_PREFIX}-python3-${_realname}")
 replaces=("${MINGW_PACKAGE_PREFIX}-python3-${_realname}")
-pkgver=6.18.0
+pkgver=6.33.0
 pkgrel=1
 pkgdesc="Advanced Quickcheck style testing library for Python (mingw-w64)"
 arch=('any')
@@ -34,7 +34,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-python-setuptools")
 #              "${MINGW_PACKAGE_PREFIX}-python-pandas")
 options=('staticlibs' 'strip' '!debug')
 source=("${_realname}-${pkgver}.tar.gz"::"https://github.com/HypothesisWorks/hypothesis/archive/hypothesis-python-${pkgver}.tar.gz")
-sha512sums=('069deaa91b7dc7244c8fccb046e384c60009365418dfb7f76ed75428446a731ec860613201d0657c2c8b3b29e4fce3c403a93aa082f48b072471f919b7a1af5a')
+sha512sums=('0165b7c431980d7758be50e834dbe04356478590d5fc54656ea9d31508bbae81f9fbb53b38178862b2d4959e17fa3564bc6971d466ba95555c8e80a6fb208639')
 
 # Helper macros to help make tasks easier #
 apply_patch_with_msg() {
@@ -93,4 +93,8 @@ package() {
   MSYS2_ARG_CONV_EXCL="--prefix=;--install-scripts=;--install-platlib=" \
   ${MINGW_PREFIX}/bin/python setup.py install --prefix=${MINGW_PREFIX} \
     --root="${pkgdir}" --optimize=1 --skip-build
+  for _f in "${pkgdir}${MINGW_PREFIX}"/bin/*-script.py; do
+    # Remove shebang line
+    sed -e '1 { s/^#!.*$// }' -i "${_f}"
+  done
 }

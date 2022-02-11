@@ -3,15 +3,18 @@
 _realname=openssl
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-_ver=1.1.1l
+_ver=1.1.1m
 # use a pacman compatible version scheme
 pkgver=${_ver/[a-z]/.${_ver//[0-9.]/}}
 pkgrel=1
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32' 'clangarm64')
 pkgdesc="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security (mingw-w64)"
-depends=("${MINGW_PACKAGE_PREFIX}-ca-certificates" "${MINGW_PACKAGE_PREFIX}-gcc-libs" "${MINGW_PACKAGE_PREFIX}-zlib")
-makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+depends=("${MINGW_PACKAGE_PREFIX}-ca-certificates"
+         "${MINGW_PACKAGE_PREFIX}-gcc-libs"
+         "${MINGW_PACKAGE_PREFIX}-zlib")
+makedepends=("${MINGW_PACKAGE_PREFIX}-autotools"
+             "${MINGW_PACKAGE_PREFIX}-cc")
 options=('strip' '!buildflags' 'staticlibs')
 license=('custom:BSD')
 url="https://www.openssl.org"
@@ -20,7 +23,7 @@ source=(https://www.openssl.org/source/${_realname}-${_ver}.tar.gz{,.asc}
         'pathtools.h'
         'openssl-1.1.1-relocation.patch'
         'openssl-1.1.1-mingw-arm.patch')
-sha256sums=('0b7a3e5e59c34827fe0c3a74b7ec8baef302b98fa80088d7f9153aa16fa76bd1'
+sha256sums=('f89199be8b23ca45fc7cb9f1d8d3ee67312318286ad030f5316aca6462db6c96'
             'SKIP'
             '6f1016e6647b6340fdceefaf24ff391f4c0ea3c785ddf70c9794ca2356797888'
             '6ce4dcf4ef6c4bce48dbcb6f1b5226baf79f74ac76719fb0c06419a0aadb37a3'
@@ -56,16 +59,16 @@ prepare() {
 }
 
 build() {
-  rm -rf ${srcdir}/build-${CARCH}
+  rm -rf ${srcdir}/build-${MSYSTEM}
 
   # No support for out-of-source builds
-  mkdir -p ${srcdir}/build-${CARCH}
-#  cp -a ${srcdir}/${_realname}-${_ver}/* ${srcdir}/build-${CARCH}
+  mkdir -p ${srcdir}/build-${MSYSTEM}
+#  cp -a ${srcdir}/${_realname}-${_ver}/* ${srcdir}/build-${MSYSTEM}
 
   # Use mingw cflags instead of hardcoded ones
   sed -i -e '/^"mingw"/ s/-fomit-frame-pointer -O3 -Wall/-O2 -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions --param=ssp-buffer-size=4/' \
      ${srcdir}/${_realname}-${_ver}/Configure
-#     ${srcdir}/build-${CARCH}/Configure
+#     ${srcdir}/build-${MSYSTEM}/Configure
 
   case "${CARCH}" in
     i?86)
@@ -82,7 +85,10 @@ build() {
       ;;
   esac
 
-  cd "${srcdir}/build-${CARCH}"
+  export CC=${MINGW_PREFIX}/bin/cc.exe
+  export CXX=${MINGW_PREFIX}/bin/c++.exe
+
+  cd "${srcdir}/build-${MSYSTEM}"
   export MSYS2_ARG_CONV_EXCL="--prefix="
   ${srcdir}/${_realname}-${_ver}/Configure \
     --prefix=${MINGW_PREFIX} \
@@ -103,12 +109,12 @@ build() {
 }
 
 check() {
-  cd "${srcdir}/build-${CARCH}"
+  cd "${srcdir}/build-${MSYSTEM}"
   make VERBOSE=1 test
 }
 
 package() {
-  cd "${srcdir}/build-${CARCH}"
+  cd "${srcdir}/build-${MSYSTEM}"
   mkdir -p "${pkgdir}${MINGW_PREFIX}"/bin
   mkdir -p "${pkgdir}${MINGW_PREFIX}"/include/openssl
   mkdir -p "${pkgdir}${MINGW_PREFIX}"/lib/engines-1_1

@@ -3,7 +3,7 @@
 _realname=libopenmpt
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
-pkgver=0.4.23
+pkgver=0.6.1
 pkgrel=1
 pkgdesc="A cross-platform C++ and C library to decode tracked music files (modules) into a raw PCM audio stream (mingw-w64)"
 arch=('any')
@@ -17,11 +17,11 @@ depends=("${MINGW_PACKAGE_PREFIX}-zlib"
           "${MINGW_PACKAGE_PREFIX}-portaudio"
           "${MINGW_PACKAGE_PREFIX}-libsndfile"
           "${MINGW_PACKAGE_PREFIX}-flac")
-makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
-             "${MINGW_PACKAGE_PREFIX}-pkg-config")
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
+             "${MINGW_PACKAGE_PREFIX}-autotools")
 options=('staticlibs' 'strip')
 source=("https://lib.openmpt.org/files/${_realname}/src/${_realname}-${pkgver}+release.autotools.tar.gz")
-sha256sums=('29697b7106db19fabead72cb9e02dcddef785d4496f24d119326e48178a719ac')
+sha256sums=('c0bada4bebfc707961111bdb5ff6bbe337f5d71e837e8278f2e362a909eb925b')
 
 prepare() {
   cd "${srcdir}/${_realname}-${pkgver}+release.autotools"
@@ -39,7 +39,6 @@ build() {
     --host=${MINGW_CHOST} \
     --enable-shared \
     --enable-static \
-    --without-portaudiocpp \
     --disable-examples
 
   make

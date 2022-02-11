@@ -3,7 +3,7 @@
 _realname=gr
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=0.59.0
+pkgver=0.62.0
 pkgrel=1
 pkgdesc="A graphics library for visualisation applications (mingw-w64)"
 arch=(any)
@@ -24,11 +24,12 @@ depends=("${MINGW_PACKAGE_PREFIX}-bzip2"
          "${MINGW_PACKAGE_PREFIX}-zlib"
          "${MINGW_PACKAGE_PREFIX}-zeromq")
 makedepends=("${MINGW_PACKAGE_PREFIX}-cmake"
-             "${MINGW_PACKAGE_PREFIX}-ninja")
+             "${MINGW_PACKAGE_PREFIX}-ninja"
+             "${MINGW_PACKAGE_PREFIX}-cc")
 options=("staticlibs" "strip" "!buildflags")
 source=("${_realname}-${pkgver}.tar.gz::https://github.com/sciapp/gr/archive/v${pkgver}.tar.gz")
 noextract=("${_realname}-${pkgver}.tar.gz")
-sha256sums=("9027BCEEBD171641BB3F0C35398DDEF529BEEA3C1CD6DC79DAD18268F9CDA50A")
+sha256sums=("871A4C57572567727831038274D0A28A2272C73A2F8E5B5B72CC856077C135EA")
 
 prepare() {
   # We can't use bsdtar to extract the archive because the archive includes
@@ -39,6 +40,7 @@ prepare() {
 
   # Set version manually, otherwise it resets to zero
   echo "${pkgver}" > version.txt
+  sed -i "s|\${GR_VERSION}|${pkgver}|g" CMakeLists.txt
 }
 
 build() {

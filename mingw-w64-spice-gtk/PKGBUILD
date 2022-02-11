@@ -6,7 +6,7 @@ pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=0.39
 pkgrel=2
 arch=('any')
-mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
 pkgdesc="GTK3 widget for SPICE clients (mingw-w64)"
 depends=("${MINGW_PACKAGE_PREFIX}-cyrus-sasl"
          "${MINGW_PACKAGE_PREFIX}-dbus-glib"
@@ -22,8 +22,9 @@ depends=("${MINGW_PACKAGE_PREFIX}-cyrus-sasl"
          "${MINGW_PACKAGE_PREFIX}-spice-protocol"
          "${MINGW_PACKAGE_PREFIX}-usbredir"
          "${MINGW_PACKAGE_PREFIX}-vala")
-makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-meson"
+             "${MINGW_PACKAGE_PREFIX}-pkg-config"
              "${MINGW_PACKAGE_PREFIX}-ninja"
              "${MINGW_PACKAGE_PREFIX}-python-pyparsing"
              "${MINGW_PACKAGE_PREFIX}-python-six")

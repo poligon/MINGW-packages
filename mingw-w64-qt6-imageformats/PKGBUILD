@@ -4,7 +4,7 @@ _realname=qt6-imageformats
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-debug")
-_qtver=6.2.0
+_qtver=6.2.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -18,12 +18,13 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cmake"
              "${MINGW_PACKAGE_PREFIX}-jasper"
              "${MINGW_PACKAGE_PREFIX}-libmng"
              "${MINGW_PACKAGE_PREFIX}-libwebp"
+             "${MINGW_PACKAGE_PREFIX}-cc"
              "rsync")
 options=('!strip')
 _pkgfn="${_realname/6-/}-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/$_qtver/submodules/$_pkgfn.tar.xz"
         "0001-qmng-fix-build.patch")
-sha256sums=('fdaa35536c3d0f8f5f313d0d52dedfbf6d8fcd81a82d6a56f473253f135072ad'
+sha256sums=('df61dc1a517988bfa123117c78a7dbeda859cbb6d9cbd080ce60058277bca3df'
             '727602791c21070a08c97c9423a4343e2a44d2f7ea48731b3720da50e4797ea5')
 
 prepare() {
@@ -39,7 +40,7 @@ build() {
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
   cmake \
     -GNinja \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
     ../${_pkgfn}
 

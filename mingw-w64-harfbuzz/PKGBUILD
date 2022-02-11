@@ -4,22 +4,21 @@
 _realname=harfbuzz
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=2.9.1
+pkgver=3.3.2
 pkgrel=1
 pkgdesc="OpenType text shaping engine (mingw-w64)"
 arch=('any')
-mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32' 'clangarm64')
 url="https://www.freedesktop.org/wiki/Software/HarfBuzz"
 license=("MIT")
-makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
-             "${MINGW_PACKAGE_PREFIX}-icu"
+makedepends=("${MINGW_PACKAGE_PREFIX}-icu"
              "${MINGW_PACKAGE_PREFIX}-gobject-introspection"
              "${MINGW_PACKAGE_PREFIX}-pkg-config"
              "${MINGW_PACKAGE_PREFIX}-cairo"
              "${MINGW_PACKAGE_PREFIX}-python"
              "${MINGW_PACKAGE_PREFIX}-meson"
-             "${MINGW_PACKAGE_PREFIX}-ninja"
-             "${MINGW_PACKAGE_PREFIX}-ragel")
+             "${MINGW_PACKAGE_PREFIX}-ragel"
+             "${MINGW_PACKAGE_PREFIX}-cc")
 depends=("${MINGW_PACKAGE_PREFIX}-freetype"
          "${MINGW_PACKAGE_PREFIX}-gcc-libs"
          "${MINGW_PACKAGE_PREFIX}-glib2"
@@ -29,8 +28,8 @@ checkdepends=("${MINGW_PACKAGE_PREFIX}-python-fonttools"
 options=('strip' 'staticlibs')
 optdepends=("${MINGW_PACKAGE_PREFIX}-icu: harfbuzz-icu support"
             "${MINGW_PACKAGE_PREFIX}-cairo: hb-view program")
-source=("https://github.com/harfbuzz/harfbuzz/archive/${pkgver}.tar.gz")
-sha256sums=('f997abd0e3b90647408bfb01af2383b5fc9557af20137e7c2deaf2fa13705dc8')
+source=("${_realname}-${pkgver}.tar.gz::https://github.com/harfbuzz/harfbuzz/archive/${pkgver}.tar.gz")
+sha256sums=('49df72f1a534ccbd0c99aec198b24185d37541127dccff49300ee65a3c05e637')
 noextract=("${pkgver}.tar.gz")
 
 prepare() {

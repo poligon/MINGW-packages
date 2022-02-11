@@ -4,9 +4,9 @@ _realname=qt6-3d
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-debug")
-_qtver=6.2.0
+_qtver=6.2.1
 pkgver=${_qtver/-/}
-pkgrel=1
+pkgrel=2
 arch=(any)
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
 url='https://www.qt.io'
@@ -19,11 +19,12 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-cmake"
              "${MINGW_PACKAGE_PREFIX}-qt6-multimedia"
              "${MINGW_PACKAGE_PREFIX}-assimp"
              "${MINGW_PACKAGE_PREFIX}-vulkan-headers"
+             "${MINGW_PACKAGE_PREFIX}-cc"
              "rsync")
 _pkgfn="${_realname/6-/}-everywhere-src-${_qtver}"
 options=('!strip')
-source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/$_qtver/submodules/$_pkgfn.tar.xz")
-sha256sums=('304352ae74fc8e7fe50a822413d69094efb25f15a2323e083a2a53dc5a43a6c6')
+source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/${_qtver}/submodules/${_pkgfn}.tar.xz")
+sha256sums=('730c0e8e1a1a59c4acbeca68e206bab14ef770f5dacb94b84103a82243cfeeb3')
 
 build() {
   cd ${srcdir}
@@ -33,8 +34,9 @@ build() {
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
   cmake \
     -GNinja \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
+    -DINPUT_qt3d_simd=sse2 \
     ../${_pkgfn}
 
   cmake --build .
@@ -53,8 +55,8 @@ package_qt6-3d() {
   # Seperate debug-info files
   rsync -armR --remove-source-files --include="*/" --include="*.debug" --exclude="*" --prune-empty-dirs ${pkgdir}/.${MINGW_PREFIX} ${srcdir}/${MSYSTEM}-debug/
 
-  install -d "$pkgdir${MINGW_PREFIX}"/share/licenses/${_realname}
-  install -Dm644 $_pkgfn/LICENSE* -t "$pkgdir${MINGW_PREFIX}"/share/licenses/${_realname}
+  install -d "${pkgdir}${MINGW_PREFIX}"/share/licenses/${_realname}
+  install -Dm644 ${_pkgfn}/LICENSE* -t "${pkgdir}${MINGW_PREFIX}"/share/licenses/${_realname}
 }
 
 package_qt6-3d-debug() {

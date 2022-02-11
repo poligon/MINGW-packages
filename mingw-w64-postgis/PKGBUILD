@@ -4,13 +4,13 @@ _realname=postgis
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
 pkgver=3.1.4
-pkgrel=3
+pkgrel=4
 pkgdesc="Spatial and Geographic objects for PostgreSQL (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
 url="https://postgis.net/"
 license=('GPL2')
-makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc" "${MINGW_PACKAGE_PREFIX}-autotools")
 depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
          "${MINGW_PACKAGE_PREFIX}-geos"
          "${MINGW_PACKAGE_PREFIX}-gettext"

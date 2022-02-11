@@ -21,9 +21,8 @@ sed -i 's/^CheckSpace/#CheckSpace/g' /etc/pacman.conf
 pacman --noconfirm -Fy
 
 # Detect
-list_commits  || failure 'Could not detect added commits'
 list_packages || failure 'Could not detect changed files'
-message 'Processing changes' "${commits[@]}"
+message 'Processing changes'
 test -z "${packages}" && success 'No changes in package recipes'
 
 # Build
@@ -39,10 +38,7 @@ message 'Building packages'
 for package in "${packages[@]}"; do
     echo "::group::[build] ${package}"
     execute 'Fetch keys' "$DIR/fetch-validpgpkeys.sh"
-    # Ensure the toolchain is installed before building the package
-    execute 'Installing the toolchain' pacman -S --needed --noconfirm --noprogressbar $MINGW_PACKAGE_PREFIX-toolchain
     execute 'Building binary' makepkg-mingw --noconfirm --noprogressbar --nocheck --syncdeps --rmdeps --cleanbuild
-    MINGW_ARCH=mingw64 execute 'Building source' makepkg-mingw --noconfirm --noprogressbar --allsource
     echo "::endgroup::"
 
     if [ -f $package/.ci-sequential ]; then
@@ -53,10 +49,12 @@ for package in "${packages[@]}"; do
             grep -qFx "${package}" "$(dirname "$0")/ci-dont-install-list.txt" || pacman --noprogressbar --upgrade --noconfirm $pkg
             echo "::endgroup::"
 
-            echo "::group::[diff] ${pkgname}"
+            echo "::group::[meta-diff] ${pkgname}"
             message "Package info diff for ${pkgname}"
             diff -Nur <(pacman -Si "${pkgname}") <(pacman -Qip "${pkg}") || true
+            echo "::endgroup::"
 
+            echo "::group::[file-diff] ${pkgname}"
             message "File listing diff for ${pkgname}"
             diff -Nur <(pacman -Fl "$pkgname" | sed -e 's|^[^ ]* |/|' | sort) <(pacman -Ql "$pkgname" | sed -e 's|^[^/]*||' | sort) || true
             echo "::endgroup::"
@@ -103,7 +101,6 @@ for package in "${packages[@]}"; do
     fi
 
     mv "${package}"/*.pkg.tar.* artifacts
-    mv "${package}"/*.src.tar.* artifacts
     unset package
 done
 success 'All packages built successfully'

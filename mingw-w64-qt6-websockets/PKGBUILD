@@ -4,7 +4,7 @@ _realname=qt6-websockets
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
          "${MINGW_PACKAGE_PREFIX}-${_realname}-debug")
-_qtver=6.2.0
+_qtver=6.2.1
 pkgver=${_qtver/-/}
 pkgrel=1
 arch=(any)
@@ -15,11 +15,12 @@ pkgdesc='Provides WebSocket communication compliant with RFC 6455 (mingw-w64)'
 makedepends=("${MINGW_PACKAGE_PREFIX}-cmake"
              "${MINGW_PACKAGE_PREFIX}-ninja"
              "${MINGW_PACKAGE_PREFIX}-qt6-declarative"
+             "${MINGW_PACKAGE_PREFIX}-cc"
              "rsync")
 options=('!strip')
 _pkgfn="${_realname/6-/}-everywhere-src-${_qtver}"
 source=("https://download.qt.io/official_releases/qt/${pkgver%.*}/$_qtver/submodules/$_pkgfn.tar.xz")
-sha256sums=('4278a1aa961f4b9c752db38ee3f5319b56f1033d0e6982eabbba6eaffb14c59f')
+sha256sums=('23344e21e96a839697abed7bf7931a8c08a752f08bf25edf240748501aba3816')
 
 build() {
   cd ${srcdir}
@@ -29,7 +30,7 @@ build() {
   MSYS2_ARG_CONV_EXCL="-DCMAKE_INSTALL_PREFIX=" \
   cmake \
     -GNinja \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=${MINGW_PREFIX} \
     ../${_pkgfn}
 

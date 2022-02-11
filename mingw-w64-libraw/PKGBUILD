@@ -14,7 +14,7 @@ arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
 url="https://www.libraw.org/"
 license=("LGPL")
-makedepends=("${MINGW_PACKAGE_PREFIX}-pkgconf")
+makedepends=("${MINGW_PACKAGE_PREFIX}-autotools" "${MINGW_PACKAGE_PREFIX}-cc")
 depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
          "${MINGW_PACKAGE_PREFIX}-jasper"
          "${MINGW_PACKAGE_PREFIX}-lcms2"
@@ -40,6 +40,11 @@ prepare() {
 build() {
   [[ -d "${srcdir}/build-${MSYSTEM}" ]] && rm -rf "${srcdir}/build-${MSYSTEM}"
   mkdir -p "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
+
+  # This would enable more formats (X3F (Foveon), Rapsberry Pi RAW+JPEG),
+  # but upstream recommends against it for security reasons, see
+  # https://github.com/LibRaw/LibRaw/blob/27144e42000/Changelog.txt#L417
+  # CPPFLAGS+=" -DUSE_6BY9RPI -DUSE_X3FTOOLS"
 
   ../${_realname}-${pkgver}/configure \
       --prefix=${MINGW_PREFIX} \

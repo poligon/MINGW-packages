@@ -3,8 +3,8 @@
 _realname=pyqt6
 pkgbase=mingw-w64-${_realname}
 pkgname=("${MINGW_PACKAGE_PREFIX}-python-${_realname}")
-pkgver=6.1.1
-pkgrel=2
+pkgver=6.2.1
+pkgrel=1
 pkgdesc="Python bindings for the Qt cross platform application toolkit (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
@@ -17,7 +17,16 @@ optdepends=("${MINGW_PACKAGE_PREFIX}-qt6-tools"
             "${MINGW_PACKAGE_PREFIX}-qt6-svg"
             "${MINGW_PACKAGE_PREFIX}-qt6-declarative"
             "${MINGW_PACKAGE_PREFIX}-qt6-quick3d"
-            "${MINGW_PACKAGE_PREFIX}-qt6-shadertools")
+            "${MINGW_PACKAGE_PREFIX}-qt6-shadertools"
+            "${MINGW_PACKAGE_PREFIX}-qt6-multimedia"
+            "${MINGW_PACKAGE_PREFIX}-qt6-remoteobjects"
+            "${MINGW_PACKAGE_PREFIX}-qt6-location"
+            "${MINGW_PACKAGE_PREFIX}-qt6-sensors"
+            "${MINGW_PACKAGE_PREFIX}-qt6-serialport"
+            "${MINGW_PACKAGE_PREFIX}-qt6-webchannel"
+            "${MINGW_PACKAGE_PREFIX}-qt6-websockets"
+            "${MINGW_PACKAGE_PREFIX}-qt6-connectivity"
+            "${MINGW_PACKAGE_PREFIX}-qt6-activeqt")
 makedepends=("${MINGW_PACKAGE_PREFIX}-sip"
              "${MINGW_PACKAGE_PREFIX}-pyqt-builder"
              "${MINGW_PACKAGE_PREFIX}-python-packaging"
@@ -25,11 +34,21 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-sip"
              "${MINGW_PACKAGE_PREFIX}-qt6-svg"
              "${MINGW_PACKAGE_PREFIX}-qt6-declarative"
              "${MINGW_PACKAGE_PREFIX}-qt6-quick3d"
-             "${MINGW_PACKAGE_PREFIX}-qt6-shadertools")
+             "${MINGW_PACKAGE_PREFIX}-qt6-shadertools"
+             "${MINGW_PACKAGE_PREFIX}-qt6-multimedia"
+             "${MINGW_PACKAGE_PREFIX}-qt6-remoteobjects"
+             "${MINGW_PACKAGE_PREFIX}-qt6-location"
+             "${MINGW_PACKAGE_PREFIX}-qt6-sensors"
+             "${MINGW_PACKAGE_PREFIX}-qt6-serialport"
+             "${MINGW_PACKAGE_PREFIX}-qt6-webchannel"
+             "${MINGW_PACKAGE_PREFIX}-qt6-websockets"
+             "${MINGW_PACKAGE_PREFIX}-qt6-connectivity"
+             "${MINGW_PACKAGE_PREFIX}-qt6-activeqt"
+             "${MINGW_PACKAGE_PREFIX}-cc")
 source=(https://pypi.python.org/packages/source/P/PyQt6/PyQt6-${pkgver}.tar.gz
         "001-fix-undefined-reference-stat.patch")
-sha256sums=('8775244fa73f94bfe8ae7672b624e2a903a22bc35d7ea42dd830949e2f9e43c7'
-            '7ff75730df39b857fc7e19c6b6d47ba6dc7ffaeab8edb1d8a7540dcf3b9447bd')
+sha256sums=('d603a5c8effccc9174b3f43834256401a61ea40f2338306ca22fb6a1e870b89c'
+            '37f2326c97b5ebaa1a3a8e8e3349eed6baf4ee968296827e0e12f90263aa38a3')
 
 prepare() {
   cd PyQt6-${pkgver}
@@ -47,6 +66,7 @@ build() {
     --no-make \
     --api-dir=${MINGW_PREFIX}/share/qt6/qsci/api/python \
     --qmake=${MINGW_PREFIX}/bin/qmake6.exe \
+    --concatenate 2 \
     --verbose
 
     cd build

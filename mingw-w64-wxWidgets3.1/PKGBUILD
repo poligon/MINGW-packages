@@ -19,18 +19,19 @@ _wx_buildver=
 pkgbase=mingw-w64-${_basename}${_wx_basever}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}${_wx_basever}"
 pkgver=${_wx_basever}.5
-pkgrel=5
+pkgrel=6
 pkgdesc="A C++ library that lets developers create applications for Windows, Linux and UNIX (mingw-w64)"
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
 url="https://wxwidgets.org/"
 license=('custom:wxWindows')
 makedepends=(
-  "make"
+  "${MINGW_PACKAGE_PREFIX}-autotools"
   "patch"
   "${MINGW_PACKAGE_PREFIX}-libpng"
   "${MINGW_PACKAGE_PREFIX}-libjpeg-turbo"
   "${MINGW_PACKAGE_PREFIX}-libtiff"
+  "${MINGW_PACKAGE_PREFIX}-cc"
 )
 options=('strip' 'staticlibs' 'buildflags' '!debug')
 #options=('!strip' 'staticlibs' 'buildflags' '!debug') # Best options for debugging CodeLite crashes

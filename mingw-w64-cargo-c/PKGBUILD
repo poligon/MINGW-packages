@@ -3,7 +3,7 @@
 _realname=cargo-c
 pkgbase=mingw-w64-${_realname}
 pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
-pkgver=0.8.0
+pkgver=0.9.7
 pkgrel=1
 pkgdesc='A cargo subcommand to build and install C-ABI compatibile dynamic and static libraries (mingw-w64)'
 arch=('any')
@@ -17,8 +17,8 @@ depends=("${MINGW_PACKAGE_PREFIX}-curl"
 makedepends=("${MINGW_PACKAGE_PREFIX}-rust")
 source=("${_realname}-${pkgver}.tar.gz"::"https://github.com/lu-zero/cargo-c/archive/v${pkgver}.tar.gz"
         "${_realname}-${pkgver}.Cargo.lock"::"https://github.com/lu-zero/cargo-c/releases/download/v${pkgver}/Cargo.lock")
-sha256sums=('2bcb143317e7f579bcfd13ef3f230cf72961ccc79abb176789f8d1fdff03fd35'
-            '9a3d77d5690db85eac391948c0a9c934433bbfd291cca1bbe43295ea11538d9d')
+sha256sums=('eead78d26b4e5924e9d750f66f2fef4d706680927542d87c895178fc0be016f0'
+            '3898341b624517daa50d95bd99e2fa873b15ea803f9e3d6f7edab11427b95de8')
 
 prepare() {
     cp "${srcdir}/${_realname}-${pkgver}.Cargo.lock" "${_realname}-${pkgver}/Cargo.lock"

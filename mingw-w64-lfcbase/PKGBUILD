@@ -13,7 +13,7 @@ license=('GPL3')
 depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs"
         "${MINGW_PACKAGE_PREFIX}-ncurses")
 
-makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc" "${MINGW_PACKAGE_PREFIX}-autotools")
 
 source=("http://www.lemke-it.com/${_realname}-${pkgver}.tar.gz")
 
@@ -29,7 +29,7 @@ prepare() {
 
 build() {
 
-  export CXXFLAGS="-DLFCNOCURSES -DDISABLE_SYSLOG"
+  export CXXFLAGS="-DLFCNOCURSES -DDISABLE_SYSLOG -std=gnu++14"
   cd "$srcdir"/${_realname}-${pkgver}
   [[ -d "${srcdir}"/build-${CARCH} ]] && rm -rf "${srcdir}"/build-${CARCH}
   mkdir -p "${srcdir}"/build-${CARCH} && cd "${srcdir}"/build-${CARCH}

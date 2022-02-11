@@ -10,11 +10,11 @@ arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
 url="https://lame.sourceforge.io/"
 license=("LGPL")
-makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+makedepends=("${MINGW_PACKAGE_PREFIX}-cc"
              "${MINGW_PACKAGE_PREFIX}-mpg123"
              "${MINGW_PACKAGE_PREFIX}-nasm"
              "${MINGW_PACKAGE_PREFIX}-ncurses"
-             "${MINGW_PACKAGE_PREFIX}-pkg-config")
+             "${MINGW_PACKAGE_PREFIX}-autotools")
 depends=("${MINGW_PACKAGE_PREFIX}-libiconv")
 options=('strip' 'staticlibs')
 source=("https://downloads.sourceforge.net/${_realname}/${_realname}-${pkgver}.tar.gz"

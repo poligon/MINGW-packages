@@ -11,11 +11,11 @@ pkgname=(
   "${MINGW_PACKAGE_PREFIX}-${_realname}-packages3D"
 )
 pkgver=5.1.10
-pkgrel=3
+pkgrel=4
 pkgdesc="Software for the creation of electronic schematic diagrams and printed circuit board artwork (mingw-w64)"
 arch=(any)
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64')
-url="https://www.kicad-pcb.org/"
+url="https://www.kicad.org/"
 license=("GPLv3+")
 groups=("${MINGW_PACKAGE_PREFIX}-eda")
 depends=(
@@ -34,7 +34,7 @@ depends=(
 makedepends=(
   "git"
   "${MINGW_PACKAGE_PREFIX}-cmake"
-  "${MINGW_PACKAGE_PREFIX}-gcc"
+  "${MINGW_PACKAGE_PREFIX}-cc"
   "${MINGW_PACKAGE_PREFIX}-doxygen"
   "${MINGW_PACKAGE_PREFIX}-make"
   "${MINGW_PACKAGE_PREFIX}-pkg-config"
