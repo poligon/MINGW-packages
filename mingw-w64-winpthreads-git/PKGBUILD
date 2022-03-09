@@ -5,9 +5,9 @@
 _realname=winpthreads
 pkgbase=mingw-w64-${_realname}-git
 pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}-git" "${MINGW_PACKAGE_PREFIX}-libwinpthread-git")
-pkgver=9.0.0.6373.5be8fcd83
+pkgver=9.0.0.6428.e1b6a2ed7
 pkgrel=1
-_commit='5be8fcd83d7e8e6859cb3f78ea1850aa5bfc067f'
+_commit='e1b6a2ed75910b8b1ff5a0d3dce4a6e935b2d077'
 pkgdesc="MinGW-w64 winpthreads library"
 url="https://mingw-w64.sourceforge.io/"
 # The main license of `winpthreads' is MIT, but parts of this library are
@@ -37,7 +37,7 @@ pkgver() {
 prepare() {
   cd "${srcdir}/mingw-w64"
   [[ -f mingw-w64-libraries/winpthreads/src/libgcc/dll_frame_info.c ]] && rm -rf mingw-w64-libraries/winpthreads/src/libgcc/dll_frame_info.c
-  git am --committer-date-is-author-date "${srcdir}"/0001-Define-__-de-register_frame_info-in-fake-libgcc_s.patch
+  git apply "${srcdir}"/0001-Define-__-de-register_frame_info-in-fake-libgcc_s.patch
 
   cd "${srcdir}"/mingw-w64/mingw-w64-libraries/winpthreads
   autoreconf -vfi
@@ -91,9 +91,6 @@ package_winpthreads-git() {
   cd ${srcdir}/build-${MINGW_CHOST}
   make DESTDIR=${pkgdir} install
 
-  mkdir -p ${pkgdir}${MINGW_PREFIX}/${MINGW_CHOST}
-  mv ${pkgdir}${MINGW_PREFIX}/include ${pkgdir}${MINGW_PREFIX}/${MINGW_CHOST}/
-  mv ${pkgdir}${MINGW_PREFIX}/lib ${pkgdir}${MINGW_PREFIX}/${MINGW_CHOST}/
   rm -rf ${pkgdir}${MINGW_PREFIX}/bin
 
   _install_licenses ${_realname}

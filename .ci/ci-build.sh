@@ -11,8 +11,6 @@ DIR="$( cd "$( dirname "$0" )" && pwd )"
 # Configure
 source "$DIR/ci-library.sh"
 mkdir artifacts
-git_config user.email 'ci@msys2.org'
-git_config user.name  'MSYS2 Continuous Integration'
 git remote add upstream 'https://github.com/MSYS2/MINGW-packages'
 git fetch --quiet upstream
 # reduce time required to install packages by disabling pacman's disk space checking
@@ -23,6 +21,28 @@ pacman --noconfirm -Fy
 # Detect
 list_packages || failure 'Could not detect changed files'
 message 'Processing changes'
+
+declare -a skipped_packages=()
+for package in "${packages[@]}"; do
+    cd "${package}"
+    readarray -d $'\0' -t mingw_arch < <(\
+        set +eo pipefail
+        mingw_arch=("mingw32" "mingw64" "ucrt64" "clang64")
+        . PKGBUILD
+        [[ "${#mingw_arch[@]}" -gt 0 ]] && printf "%s\0" "${mingw_arch[@]}"
+    )
+    if [[ ! " ${mingw_arch[*]} " =~ " ${MSYSTEM,,} " ]]; then
+        skipped_packages+=("${package}")
+    fi
+    cd - > /dev/null
+    unset package
+done
+
+for package in "${skipped_packages[@]}"; do
+    packages=(${packages[@]/"${package}"})
+    unset package
+done
+
 test -z "${packages}" && success 'No changes in package recipes'
 
 # Build
@@ -34,9 +54,13 @@ repo-add $PWD/artifacts/ci.db.tar.gz
 sed -i '1s|^|[ci]\nServer = file://'"$PWD"'/artifacts/\nSigLevel = Never\n|' /etc/pacman.conf
 pacman -Sy
 
+# Remove git and python
+pacman -R --recursive --unneeded --noconfirm --noprogressbar git python
+
 message 'Building packages'
 for package in "${packages[@]}"; do
     echo "::group::[build] ${package}"
+    execute 'Clear cache' pacman -Scc --noconfirm
     execute 'Fetch keys' "$DIR/fetch-validpgpkeys.sh"
     execute 'Building binary' makepkg-mingw --noconfirm --noprogressbar --nocheck --syncdeps --rmdeps --cleanbuild
     echo "::endgroup::"

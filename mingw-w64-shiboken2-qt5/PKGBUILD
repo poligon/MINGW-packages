@@ -5,8 +5,8 @@ _realname=shiboken2
 pkgbase=mingw-w64-${_realname}-qt5
 pkgname=(${MINGW_PACKAGE_PREFIX}-${_realname}-qt5)
 pkgdesc="CPython bindings generator for C++ libraries (mingw-w64)"
-pkgver=5.15.2
-pkgrel=8
+pkgver=5.15.3
+pkgrel=1
 arch=('any')
 mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
 url="https://doc.qt.io/qtforpython-5/"
@@ -28,20 +28,23 @@ source=(https://download.qt.io/official_releases/QtForPython/pyside2/PySide2-${p
         001-shiboken.patch
         002-cmake-relative-paths.patch
         003-llvm-paths.patch)
-sha256sums=('b306504b0b8037079a8eab772ee774b9e877a2d84bab2dbefbe4fa6f83941418'
+noextract=("${_pkgfqn}.tar.xz")
+sha256sums=('69481d137d80ed42461cbdb06cee06477f0a8cbe235d61b56472a66ed7982093'
             'd7150cd5c554e5da68f5a53e08b46af02e45c5fc3481e99a1289b194e3220015'
             'e8fce91fee692a3ef906c841575e53e141a58c0c97c63fd1d94bed5a823190f9'
             '0cb712ba34d9951b0c29dc3b71f9c82882064331bd54a4cf0f4c792837932497')
 
 prepare() {
-  cd "${srcdir}"/$_pkgfqn
+  cd "${srcdir}"
+  tar -xJf ${srcdir}/${_pkgfqn}.tar.xz -C ${srcdir} || true
+
+  cd "${srcdir}"/${_pkgfqn}
   patch -p1 -i ${srcdir}/001-shiboken.patch
   patch -p1 -i ${srcdir}/002-cmake-relative-paths.patch
   patch -p1 -i ${srcdir}/003-llvm-paths.patch
 }
 
 build() {
-  CXXFLAGS+=" -D__USE_MINGW_ANSI_STDIO=1"
   [[ -d ${srcdir}/build-${MSYSTEM} ]] && rm -rf ${srcdir}/build-${MSYSTEM}
   mkdir -p ${srcdir}/build-${MSYSTEM} && cd ${srcdir}/build-${MSYSTEM}
 
@@ -73,7 +76,7 @@ package() {
   done
 
   # Install egg-info
-  cd "${srcdir}"/$_pkgfqn
+  cd "${srcdir}"/${_pkgfqn}
   ${MINGW_PREFIX}/bin/python setup.py egg_info --build-type=shiboken2
   _pythonpath=`${MINGW_PREFIX}/bin/python -c "from sysconfig import get_path; print(get_path('platlib'))"`
   cp -r shiboken2.egg-info "$pkgdir"/$(cygpath ${_pythonpath})
